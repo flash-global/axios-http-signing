@@ -1,0 +1,24 @@
+{
+  "extends": [
+    "airbnb-typescript/base",
+    "plugin:jest/recommended"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "@typescript-eslint/indent": ["error", 4]
+  },
+  "plugins": [
+    "import",
+    "jest"
+  ],
+  "overrides": [
+    {
+      "files": "**/*.ts",
+      "parserOptions": {
+        "project": "./tsconfig.eslint.json"
+      }
+    }
+  ]
+}
