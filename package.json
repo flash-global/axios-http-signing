@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint index.ts test/",
-    "test": "jest --coverage"
+    "lint": "eslint index.ts test -f json -o eslint_report.json",
+    "test": "jest --coverage test/"
   },
   "repository": {
     "type": "git",
