@@ -5,6 +5,7 @@ const config: Config.InitialOptions = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     coveragePathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/test/'],
+    coverageReporters: ['lcov'],
 };
 
 export default config;
