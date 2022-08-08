@@ -1,14 +1,19 @@
 language: node_js
+
 node_js: 16
 
-if: type IN(pull_request) OR branch IN (master, develop) OR tag IS present
+script:
+  - npm run lint
+  - npm run test
 
-import:
-  - source: flash-global/travis:common.yml@master
-    mode: deep_merge_append
-  - source: flash-global/travis:js/common.yml@master
-    mode: deep_merge_append
-  - source: flash-global/travis:publish_npm.yml@master
-    mode: deep_merge_prepend
-  - source: flash-global/travis:sonar-scanner.yml@master
-    mode: deep_merge_append
+before_deploy:
+  - npm run build
+  - npm --no-git-tag-version --allow-same-version version $TRAVIS_TAG
+
+deploy:
+  - provider: npm
+    skip_cleanup: true
+    email: $npm_mail
+    api_key: $npm_key
+    on:
+      tags: true
