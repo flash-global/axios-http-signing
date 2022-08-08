@@ -10,6 +10,6 @@
     "strictFunctionTypes": true,
   },
   "include": [
-    "src/*.ts"
+    "index.ts"
   ]
 }
