@@ -1,5 +1,5 @@
 {
-  "name": "@redspher/axios-http-signing",
+  "name": "axios-http-signing",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
