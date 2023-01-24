@@ -45,6 +45,41 @@ describe('http signing', () => {
         expect(response.status).toStrictEqual(200);
     });
 
+    test('check auth digest ignored', async () => {
+        const client = axios.create();
+        const host = 'https://fake.url';
+
+        nock(host)
+            .get('/api/shaq/FAKE')
+            .reply(200, function (uri) {
+                const check = this.req.headers.authorization.split(',');
+
+                expect(check[0]).toStrictEqual('Signature keyId="DEMO.myApp"');
+                expect(check[1]).toStrictEqual('algorithm="rsa-sha256"');
+                expect(check[2]).toStrictEqual('headers="(request-target) date"');
+                expect(uri).toStrictEqual('/api/shaq/FAKE');
+            });
+
+        authorizeWithDigest(client, {
+            keyId: 'DEMO.myApp',
+            privKey: fs.readFileSync(__dirname + '/../rsa.private'),
+            headers: [
+                '(request-target)',
+                'date',
+                'digest',
+            ],
+        });
+
+        const response: AxiosResponse = await client.get(host + '/api/shaq/FAKE',
+            {
+                headers: {
+                    'signing-auth': 'ok',
+                },
+            });
+
+        expect(response.status).toStrictEqual(200);
+    });
+
     test('check auth with no headers', async () => {
         const client = axios.create();
         const host = 'https://fake.url';

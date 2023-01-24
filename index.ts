@@ -22,16 +22,19 @@ export class HttpSigning {
 
             let digest: string | null = null;
 
-            if (config.data) {
+            if (config.data !== undefined) {
                 digest = 'SHA-256=' + Buffer.from(hash.update(JSON.stringify(config.data))
                     .digest('binary'), 'binary')
                     .toString('base64');
             }
-            if (this.config.headers === undefined) {
-                this.config.headers = ['date'];
+
+            let configuredHeaders = this.config.headers || ['date'];
+
+            if (digest === null) {
+                configuredHeaders = configuredHeaders.filter((item) => item.toLowerCase() !== 'digest');
             }
 
-            const headers = this.config.headers.join(' ');
+            const headers = configuredHeaders.join(' ');
 
             if (config.headers === undefined) {
                 config.headers = {
@@ -39,7 +42,7 @@ export class HttpSigning {
                 };
             }
 
-            const message = this.config.headers.map(item => {
+            const message = configuredHeaders.map(item => {
                 let value = config.headers?.hasOwnProperty(item) ? config.headers[item] : null;
 
                 if (item === '(request-target)') {
@@ -63,6 +66,7 @@ export class HttpSigning {
             config.headers.date = date;
             config.headers.authorization = 'Signature keyId="' + this.config.keyId +
                 '",algorithm="rsa-sha256",headers="' + headers + '",signature="' + signature + '"';
+
             if (digest !== null) {
                 config.headers.digest = digest;
             }
