@@ -46,7 +46,8 @@ export class HttpSigning {
                 let value = config.headers?.hasOwnProperty(item) ? config.headers[item] : null;
 
                 if (item === '(request-target)') {
-                    value = config.method?.toLowerCase() + ' ' + config.url;
+                    const url = new URL(config.url as string);
+                    value = config.method?.toLowerCase() + ' ' + url.pathname + url.search;
                 } else if (item.toLowerCase() === 'date') {
                     value = date;
                 } else if (item.toLowerCase() === 'digest') {
